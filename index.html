@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,16 +13,16 @@
                 extend: {
                     colors: {
                         primary: {
-                            50: '#f5f3ff',
-                            100: '#ede9fe',
-                            200: '#ddd6fe',
-                            300: '#c4b5fd',
-                            400: '#a78bfa',
-                            500: '#8b5cf6',
-                            600: '#7c3aed',
-                            700: '#6d28d9',
-                            800: '#5b21b6',
-                            900: '#4c1d95',
+                            50: '#fef2f2',
+                            100: '#fee2e2',
+                            200: '#fecaca',
+                            300: '#fca5a5',
+                            400: '#f87171',
+                            500: '#ef4444',
+                            600: '#dc2626',
+                            700: '#b91c1c',
+                            800: '#991b1b',
+                            900: '#7f1d1d',
                         }
                     },
                     fontFamily: {
@@ -30,6 +30,12 @@
                     }
                 }
             }
+        }
+    </script>
+    <!-- Apply stored theme before paint (dark is the default) -->
+    <script>
+        if (localStorage.theme === 'light') {
+            document.documentElement.classList.remove('dark');
         }
     </script>
     <!-- Google Fonts -->
@@ -52,71 +58,93 @@
             background: rgba(15, 23, 42, 0.05);
         }
         .dark ::-webkit-scrollbar-track {
-            background: rgba(15, 23, 42, 0.5);
+            background: #0a0a0a;
         }
         ::-webkit-scrollbar-thumb {
-            background: #8b5cf6;
+            background: #b91c1c;
             border-radius: 9999px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #7c3aed;
+            background: #dc2626;
         }
-        /* Printable CV Styles */
-        @media print {
-            body {
-                background: white !important;
-                color: black !important;
-            }
-            .no-print {
-                display: none !important;
-            }
-            .print-layout {
-                display: block !important;
-                padding: 0 !important;
-                margin: 0 !important;
-            }
-            .print-card {
-                border: 1px solid #e2e8f0 !important;
-                box-shadow: none !important;
-                page-break-inside: avoid;
-            }
+        /* CV dropdown motion */
+        .cv-menu {
+            transition: opacity 0.15s ease, transform 0.15s ease;
+        }
+        .cv-menu.is-open {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        .cv-menu:not(.is-open) {
+            opacity: 0;
+            transform: translateY(-6px) scale(0.98);
+            pointer-events: none;
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 min-h-screen selection:bg-primary-500 selection:text-white">
+<body class="bg-slate-50 text-slate-800 dark:bg-black dark:text-slate-100 min-h-screen selection:bg-primary-600 selection:text-white">
 
     <!-- Navigation Bar -->
-    <header class="fixed top-0 left-0 w-full z-50 bg-white/85 dark:bg-slate-900/85 backdrop-blur-md border-b border-slate-200/50 dark:border-slate-800/50 no-print">
+    <header class="fixed top-0 left-0 w-full z-50 bg-white/85 dark:bg-black/85 backdrop-blur-md border-b border-slate-200/50 dark:border-neutral-800/70">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <!-- Logo -->
                 <div class="flex-shrink-0 flex items-center gap-2">
-                    <span class="text-2xl font-black bg-gradient-to-r from-primary-600 to-indigo-500 bg-clip-text text-transparent">AH.</span>
-                    <span class="hidden sm:inline-block font-bold tracking-tight text-sm uppercase text-slate-500 dark:text-slate-400">Software Engineer</span>
+                    <span class="text-2xl font-black bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">AH.</span>
+                    <span class="hidden sm:inline-block font-bold tracking-tight text-sm uppercase text-slate-500 dark:text-neutral-400">Software Engineer</span>
                 </div>
                 
                 <!-- Desktop Navigation Links -->
-                <nav class="hidden md:flex items-center space-x-8">
+                <nav class="hidden md:flex items-center space-x-6">
                     <a href="#home" class="text-sm font-medium hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Home</a>
                     <a href="#about" class="text-sm font-medium hover:text-primary-600 dark:hover:text-primary-400 transition-colors">About</a>
                     <a href="#skills" class="text-sm font-medium hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Skills</a>
+                    <a href="#languages" class="text-sm font-medium hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Languages</a>
                     <a href="#projects" class="text-sm font-medium hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Projects</a>
                     <a href="#education" class="text-sm font-medium hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Education</a>
                     <a href="#contact" class="text-sm font-medium hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Contact</a>
                 </nav>
 
-                <!-- Actions (Theme Toggle & CV Print/Download) -->
+                <!-- Actions (Theme Toggle & CV Download) -->
                 <div class="flex items-center space-x-4">
                     <!-- Light/Dark Mode Switcher -->
-                    <button id="themeToggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500" aria-label="Toggle Theme">
-                        <i id="themeIcon" class="fa-solid fa-moon"></i>
+                    <button id="themeToggle" class="p-2 rounded-lg bg-slate-100 dark:bg-neutral-900 hover:bg-slate-200 dark:hover:bg-neutral-800 text-slate-600 dark:text-neutral-300 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-600" aria-label="Toggle Theme">
+                        <i id="themeIcon" class="fa-solid fa-sun"></i>
                     </button>
-                    <!-- Print CV Action Button -->
-                    <button onclick="window.print()" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white bg-primary-600 hover:bg-primary-700 active:bg-primary-800 rounded-lg shadow-sm transition-all transform hover:-translate-y-0.5">
-                        <i class="fa-solid fa-print"></i> Print CV
-                    </button>
+
+                    <!-- Download CV Dropdown -->
+                    <div class="relative hidden sm:block">
+                        <button id="cvBtn" class="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white bg-primary-600 hover:bg-primary-700 active:bg-primary-800 rounded-lg shadow-sm transition-all transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-primary-500" aria-haspopup="true" aria-expanded="false" aria-controls="cvMenu">
+                            <i class="fa-solid fa-download"></i> Download CV
+                            <i id="cvCaret" class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
+                        </button>
+                        <div id="cvMenu" class="cv-menu hidden absolute right-0 mt-3 w-64 origin-top-right rounded-2xl bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 shadow-2xl overflow-hidden z-50">
+                            <a href="Aoun%20Hussain%20GameDev%20CV.pdf" download="Aoun Hussain GameDev CV.pdf" class="flex items-center gap-3 px-4 py-3.5 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-neutral-800 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                                <span class="p-2 rounded-lg bg-primary-50 dark:bg-primary-900/40 text-primary-600 dark:text-primary-400 shrink-0">
+                                    <i class="fa-solid fa-gamepad"></i>
+                                </span>
+                                <span class="flex-1">
+                                    Game Development CV
+                                    <span class="block text-[11px] font-medium text-slate-400 dark:text-neutral-500">Unity &amp; Godot roles</span>
+                                </span>
+                                <span class="text-[10px] font-bold text-slate-400 dark:text-neutral-500">PDF</span>
+                            </a>
+                            <div class="h-px bg-slate-100 dark:bg-neutral-800"></div>
+                            <a href="Aoun%20Hussain%20CV.pdf" download="Aoun Hussain CV.pdf" class="flex items-center gap-3 px-4 py-3.5 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-neutral-800 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                                <span class="p-2 rounded-lg bg-primary-50 dark:bg-primary-900/40 text-primary-600 dark:text-primary-400 shrink-0">
+                                    <i class="fa-solid fa-code"></i>
+                                </span>
+                                <span class="flex-1">
+                                    Web Development CV
+                                    <span class="block text-[11px] font-medium text-slate-400 dark:text-neutral-500">MERN &amp; Next.js roles</span>
+                                </span>
+                                <span class="text-[10px] font-bold text-slate-400 dark:text-neutral-500">PDF</span>
+                            </a>
+                        </div>
+                    </div>
+
                     <!-- Mobile Menu Button -->
-                    <button id="mobileMenuBtn" class="md:hidden p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 focus:outline-none" aria-label="Toggle Mobile Menu">
+                    <button id="mobileMenuBtn" class="md:hidden p-2 rounded-lg bg-slate-100 dark:bg-neutral-900 hover:bg-slate-200 dark:hover:bg-neutral-800 text-slate-600 dark:text-neutral-300 focus:outline-none" aria-label="Toggle Mobile Menu">
                         <i id="menuIcon" class="fa-solid fa-bars"></i>
                     </button>
                 </div>
@@ -124,17 +152,35 @@
         </div>
 
         <!-- Mobile Menu Container -->
-        <div id="mobileMenu" class="hidden md:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 py-4 space-y-3 shadow-lg">
+        <div id="mobileMenu" class="hidden md:hidden border-t border-slate-200 dark:border-neutral-800 bg-white dark:bg-black px-4 py-4 space-y-3 shadow-lg">
             <a href="#home" class="block text-base font-medium text-slate-700 dark:text-slate-200 hover:text-primary-600 py-1 transition-colors">Home</a>
             <a href="#about" class="block text-base font-medium text-slate-700 dark:text-slate-200 hover:text-primary-600 py-1 transition-colors">About</a>
             <a href="#skills" class="block text-base font-medium text-slate-700 dark:text-slate-200 hover:text-primary-600 py-1 transition-colors">Skills</a>
+            <a href="#languages" class="block text-base font-medium text-slate-700 dark:text-slate-200 hover:text-primary-600 py-1 transition-colors">Languages</a>
             <a href="#projects" class="block text-base font-medium text-slate-700 dark:text-slate-200 hover:text-primary-600 py-1 transition-colors">Projects</a>
             <a href="#education" class="block text-base font-medium text-slate-700 dark:text-slate-200 hover:text-primary-600 py-1 transition-colors">Education</a>
             <a href="#contact" class="block text-base font-medium text-slate-700 dark:text-slate-200 hover:text-primary-600 py-1 transition-colors">Contact</a>
-            <hr class="border-slate-200 dark:border-slate-800">
-            <button onclick="window.print()" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold uppercase text-white bg-primary-600 rounded-lg hover:bg-primary-700">
-                <i class="fa-solid fa-print"></i> Print CV File
-            </button>
+            <hr class="border-slate-200 dark:border-neutral-800">
+            <!-- Mobile Download CV Dropdown -->
+            <div class="relative">
+                <button id="mobileCvBtn" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold uppercase text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors" aria-haspopup="true" aria-expanded="false" aria-controls="mobileCvMenu">
+                    <i class="fa-solid fa-download"></i> Download CV
+                    <i id="mobileCvCaret" class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
+                </button>
+                <div id="mobileCvMenu" class="cv-menu hidden absolute left-0 right-0 mt-2 rounded-xl bg-slate-50 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 shadow-2xl overflow-hidden z-50">
+                    <a href="Aoun%20Hussain%20GameDev%20CV.pdf" download="Aoun Hussain GameDev CV.pdf" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-neutral-800 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                        <i class="fa-solid fa-gamepad text-primary-600 dark:text-primary-400"></i>
+                        Game Development CV
+                        <span class="ml-auto text-[10px] font-bold text-slate-400 dark:text-neutral-500">PDF</span>
+                    </a>
+                    <div class="h-px bg-slate-200 dark:bg-neutral-800"></div>
+                    <a href="Aoun%20Hussain%20CV.pdf" download="Aoun Hussain CV.pdf" class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-neutral-800 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                        <i class="fa-solid fa-code text-primary-600 dark:text-primary-400"></i>
+                        Web Development CV
+                        <span class="ml-auto text-[10px] font-bold text-slate-400 dark:text-neutral-500">PDF</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -142,46 +188,46 @@
     <section id="home" class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
         <!-- Background Decorative Gradients -->
         <div class="absolute inset-0 z-0">
-            <div class="absolute top-[20%] left-[10%] w-[30vw] h-[30vw] rounded-full bg-primary-300/20 dark:bg-primary-900/10 blur-[80px]"></div>
-            <div class="absolute bottom-[20%] right-[10%] w-[40vw] h-[40vw] rounded-full bg-indigo-300/20 dark:bg-indigo-900/10 blur-[100px]"></div>
+            <div class="absolute top-[20%] left-[10%] w-[30vw] h-[30vw] rounded-full bg-primary-500/10 blur-[80px]"></div>
+            <div class="absolute bottom-[20%] right-[10%] w-[40vw] h-[40vw] rounded-full bg-primary-700/10 blur-[100px]"></div>
         </div>
 
         <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center md:text-left">
             <div class="grid md:grid-cols-12 gap-12 items-center">
                 <!-- Text Content -->
                 <div class="md:col-span-7 space-y-6">
-                    <span class="inline-flex items-center gap-2 px-3 py-1 text-xs font-semibold tracking-wider text-primary-800 dark:text-primary-300 bg-primary-100 dark:bg-primary-900/50 rounded-full uppercase">
-                        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>Currently: Job Hunting
+                    <span class="inline-flex items-center gap-2 px-3 py-1 text-xs font-semibold tracking-wider text-primary-700 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/40 rounded-full uppercase">
+                        <span class="w-2 h-2 rounded-full bg-primary-500 animate-pulse"></span>Currently: Job Hunting
                     </span>
                     <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight">
-                        <span class="bg-gradient-to-r from-yellow-200 to-orange-400 bg-clip-text text-transparent">Syed Muhammad Aoun Hussain</span>
+                        <span class="bg-gradient-to-r from-slate-900 to-primary-600 dark:from-white dark:to-primary-500 bg-clip-text text-transparent">Syed Muhammad Aoun Hussain</span>
                     </h1>
-                    <h2 class="text-xl sm:text-2xl font-bold text-slate-600 dark:text-slate-300">
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-600 dark:text-neutral-300">
                         Software Engineer & Next.js Full-Stack Developer
                     </h2>
-                    <p class="text-lg text-slate-500 dark:text-slate-400 max-w-xl mx-auto md:mx-0 leading-relaxed">
+                    <p class="text-lg text-slate-500 dark:text-neutral-400 max-w-xl mx-auto md:mx-0 leading-relaxed">
                         I build, code, and design robust web applications and interactive software with precision refined through full-stack projects.
                     </p>
                     
                     <!-- Quick Call to Actions -->
                     <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                        <a href="#projects" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 transform hover:-translate-y-0.5 transition-all">
+                        <a href="#projects" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl shadow-lg shadow-primary-600/20 hover:shadow-primary-600/30 transform hover:-translate-y-0.5 transition-all">
                             Explore My Projects <i class="fa-solid fa-arrow-right"></i>
                         </a>
-                        <a href="#contact" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-slate-700 dark:text-slate-200 font-medium rounded-xl transition-all">
+                        <a href="#contact" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 hover:bg-slate-50 dark:hover:bg-neutral-800 text-slate-700 dark:text-slate-200 font-medium rounded-xl transition-all">
                             Get In Touch <i class="fa-solid fa-paper-plane"></i>
                         </a>
                     </div>
 
                     <!-- Social Icons / Links -->
                     <div class="flex items-center justify-center md:justify-start gap-5 pt-4">
-                        <a href="https://github.com/Kaklio" target="_blank" class="p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl hover:text-primary-600 hover:border-primary-500 transition-all shadow-sm">
+                        <a href="https://github.com/Kaklio" target="_blank" class="p-3 bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-xl hover:text-primary-600 hover:border-primary-500 transition-all shadow-sm">
                             <i class="fa-brands fa-github text-2xl"></i>
                         </a>
-                        <a href="https://www.linkedin.com/in/aoun-hussain-1433b138a" target="_blank" class="p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl hover:text-primary-600 hover:border-primary-500 transition-all shadow-sm">
+                        <a href="https://www.linkedin.com/in/aoun-hussain-1433b138a" target="_blank" class="p-3 bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-xl hover:text-primary-600 hover:border-primary-500 transition-all shadow-sm">
                             <i class="fa-brands fa-linkedin-in text-2xl"></i>
                         </a>
-                        <a href="mailto:aounhussainshah@gmail.com" class="p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl hover:text-primary-600 hover:border-primary-500 transition-all shadow-sm">
+                        <a href="mailto:aounhussainshah@gmail.com" class="p-3 bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-xl hover:text-primary-600 hover:border-primary-500 transition-all shadow-sm">
                             <i class="fa-solid fa-envelope text-2xl"></i>
                         </a>
                     </div>
@@ -191,17 +237,17 @@
                 <div class="md:col-span-5 flex justify-center">
                     <div class="relative w-72 h-72 sm:w-80 sm:h-80 lg:w-96 lg:h-96">
                         <!-- Orbiting outer border -->
-                        <div class="absolute inset-0 rounded-full border-4 border-dashed border-primary-500/30 animate-[spin_40s_linear_infinite]"></div>
+                        <div class="absolute inset-0 rounded-full border-4 border-dashed border-primary-600/40 animate-[spin_40s_linear_infinite]"></div>
                         <!-- Decorative glow -->
-                        <div class="absolute inset-4 rounded-full bg-gradient-to-br from-primary-500 to-indigo-500 opacity-20 blur-xl"></div>
+                        <div class="absolute inset-4 rounded-full bg-gradient-to-br from-primary-600 to-primary-900 opacity-20 blur-xl"></div>
                         <!-- Profile/Letter Visual -->
-                        <div class="absolute inset-4 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xl flex flex-col items-center justify-center text-center p-6">
-                            <div class="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gradient-to-tr from-primary-600 to-indigo-600 flex items-center justify-center text-white text-4xl sm:text-5xl font-black shadow-lg shadow-primary-500/20 mb-4">
+                        <div class="absolute inset-4 rounded-full bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 shadow-xl flex flex-col items-center justify-center text-center p-6">
+                            <div class="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gradient-to-tr from-primary-600 to-primary-900 flex items-center justify-center text-white text-4xl sm:text-5xl font-black shadow-lg shadow-primary-700/30 mb-4">
                                 AH
                             </div>
                             <h3 class="text-xl font-bold">Aoun Hussain</h3>
-                            <p class="text-sm text-slate-500 dark:text-slate-400">Sheikhupura, Pakistan</p>
-                            <span class="mt-3 px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-semibold tracking-wide text-primary-600 dark:text-primary-300">
+                            <p class="text-sm text-slate-500 dark:text-neutral-400">Sheikhupura, Pakistan</p>
+                            <span class="mt-3 px-3 py-1 bg-slate-100 dark:bg-neutral-800 rounded-full text-xs font-semibold tracking-wide text-primary-600 dark:text-primary-400">
                                 BS IT Graduate '26
                             </span>
                         </div>
@@ -212,7 +258,7 @@
     </section>
 
     <!-- About Section -->
-    <section id="about" class="py-20 bg-white dark:bg-slate-900/50">
+    <section id="about" class="py-20 bg-white dark:bg-neutral-950">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-16">
                 <span class="text-xs font-bold tracking-wider text-primary-600 dark:text-primary-400 uppercase">Introduction</span>
@@ -223,36 +269,36 @@
             <div class="grid md:grid-cols-12 gap-12 items-center">
                 <!-- Visual / Highlight Box -->
                 <div class="md:col-span-5">
-                    <div class="bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-800/50 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm relative overflow-hidden">
-                        <div class="absolute top-0 right-0 w-24 h-24 bg-primary-500/10 rounded-full blur-xl"></div>
+                    <div class="bg-gradient-to-br from-slate-100 to-slate-200 dark:from-neutral-900 dark:to-neutral-900/50 p-8 rounded-3xl border border-slate-200 dark:border-neutral-800 shadow-sm relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-primary-600/10 rounded-full blur-xl"></div>
                         
                         <h3 class="text-2xl font-bold mb-4">Quick Highlights</h3>
                         <ul class="space-y-4">
                             <li class="flex items-start gap-3">
-                                <span class="p-2 bg-primary-100 dark:bg-primary-900/40 text-primary-600 dark:text-primary-300 rounded-lg shrink-0">
+                                <span class="p-2 bg-primary-50 dark:bg-primary-900/40 text-primary-600 dark:text-primary-400 rounded-lg shrink-0">
                                     <i class="fa-solid fa-graduation-cap"></i>
                                 </span>
                                 <div>
                                     <h4 class="font-bold text-sm">Bachelors in IT</h4>
-                                    <p class="text-xs text-slate-500 dark:text-slate-400">Govt College Sheikhupura</p>
+                                    <p class="text-xs text-slate-500 dark:text-neutral-400">Govt College Sheikhupura</p>
                                 </div>
                             </li>
                             <li class="flex items-start gap-3">
-                                <span class="p-2 bg-primary-100 dark:bg-primary-900/40 text-primary-600 dark:text-primary-300 rounded-lg shrink-0">
-                                    <i class="fa-solid fa-medal"></i>
+                                <span class="p-2 bg-primary-50 dark:bg-primary-900/40 text-primary-600 dark:text-primary-400 rounded-lg shrink-0">
+                                    <i class="fa-solid fa-code-branch"></i>
                                 </span>
                                 <div>
-                                    <h4 class="font-bold text-sm">3.0 CGPA & 77% ICS</h4>
-                                    <p class="text-xs text-slate-500 dark:text-slate-400">Consistently strong academic credentials</p>
+                                    <h4 class="font-bold text-sm">Game &amp; Web Developer</h4>
+                                    <p class="text-xs text-slate-500 dark:text-neutral-400">Shipped Unity, Godot, MERN and Next.js projects</p>
                                 </div>
                             </li>
                             <li class="flex items-start gap-3">
-                                <span class="p-2 bg-primary-100 dark:bg-primary-900/40 text-primary-600 dark:text-primary-300 rounded-lg shrink-0">
+                                <span class="p-2 bg-primary-50 dark:bg-primary-900/40 text-primary-600 dark:text-primary-400 rounded-lg shrink-0">
                                     <i class="fa-solid fa-location-dot"></i>
                                 </span>
                                 <div>
                                     <h4 class="font-bold text-sm">Location</h4>
-                                    <p class="text-xs text-slate-500 dark:text-slate-400">Abdullah Shah Street, Khalid Road, Sheikhupura</p>
+                                    <p class="text-xs text-slate-500 dark:text-neutral-400">Abdullah Shah Street, Khalid Road, Sheikhupura</p>
                                 </div>
                             </li>
                         </ul>
@@ -269,21 +315,21 @@
                     </p>
                     
                     <!-- Core values/Traits badges -->
-                    <div class="grid grid-cols-2 gap-4 pt-4 border-t border-slate-200 dark:border-slate-800">
+                    <div class="grid grid-cols-2 gap-4 pt-4 border-t border-slate-200 dark:border-neutral-800">
                         <div class="flex items-center gap-2">
-                            <i class="fa-solid fa-circle-check text-green-500"></i>
+                            <i class="fa-solid fa-circle-check text-primary-500"></i>
                             <span class="font-medium text-sm">Dynamic Problem Solver</span>
                         </div>
                         <div class="flex items-center gap-2">
-                            <i class="fa-solid fa-circle-check text-green-500"></i>
+                            <i class="fa-solid fa-circle-check text-primary-500"></i>
                             <span class="font-medium text-sm">Reliable Team Player</span>
                         </div>
                         <div class="flex items-center gap-2">
-                            <i class="fa-solid fa-circle-check text-green-500"></i>
+                            <i class="fa-solid fa-circle-check text-primary-500"></i>
                             <span class="font-medium text-sm">Attentive Listener</span>
                         </div>
                         <div class="flex items-center gap-2">
-                            <i class="fa-solid fa-circle-check text-green-500"></i>
+                            <i class="fa-solid fa-circle-check text-primary-500"></i>
                             <span class="font-medium text-sm">Rigorous Product Builder</span>
                         </div>
                     </div>
@@ -293,98 +339,205 @@
     </section>
 
     <!-- Skills & Core Competencies Section -->
-    <section id="skills" class="py-20 bg-slate-50 dark:bg-slate-900">
+    <section id="skills" class="py-20 bg-slate-50 dark:bg-black">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-16">
                 <span class="text-xs font-bold tracking-wider text-primary-600 dark:text-primary-400 uppercase">Expertise</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold mt-2">Skills & Competencies</h2>
+                <h2 class="text-3xl sm:text-4xl font-extrabold mt-2">Skills &amp; Competencies</h2>
                 <div class="w-16 h-1 bg-primary-600 mx-auto mt-4 rounded-full"></div>
             </div>
 
             <div class="grid md:grid-cols-3 gap-8">
-                <!-- Functional Skills -->
-                <div class="bg-white dark:bg-slate-800 p-8 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm">
-                    <div class="p-3 bg-primary-100 dark:bg-primary-900/40 text-primary-600 dark:text-primary-300 rounded-xl w-fit mb-6">
-                        <i class="fa-solid fa-gears text-2xl"></i>
+                <!-- Functional Skill: Game Development -->
+                <div class="bg-white dark:bg-neutral-900 p-8 rounded-2xl border border-slate-200/60 dark:border-neutral-800 shadow-sm">
+                    <div class="p-3 bg-primary-50 dark:bg-primary-900/40 text-primary-600 dark:text-primary-400 rounded-xl w-fit mb-6">
+                        <i class="fa-solid fa-gamepad text-2xl"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-4">Functional Skills</h3>
-                    <div class="space-y-4">
-                        <div class="space-y-1">
-                            <div class="flex justify-between text-sm font-semibold">
-                                <span>Software Development</span>
-                                <span>Advanced</span>
-                            </div>
-                            <div class="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
-                                <div class="bg-primary-600 h-full rounded-full" style="width: 88%;"></div>
-                            </div>
+                    <h3 class="text-xl font-bold mb-4">Game Development</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-2.5 text-sm font-medium text-slate-600 dark:text-slate-300">
+                            <i class="fa-solid fa-check-double text-primary-500"></i> Unity 6 game development (C#)
                         </div>
-                        <div class="space-y-1">
-                            <div class="flex justify-between text-sm font-semibold">
-                                <span>Project Management</span>
-                                <span>Proficient</span>
-                            </div>
-                            <div class="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
-                                <div class="bg-primary-600 h-full rounded-full" style="width: 78%;"></div>
-                            </div>
+                        <div class="flex items-center gap-2.5 text-sm font-medium text-slate-600 dark:text-slate-300">
+                            <i class="fa-solid fa-check-double text-primary-500"></i> Godot Engine (GDScript / C#)
                         </div>
-                        <div class="space-y-1">
-                            <div class="flex justify-between text-sm font-semibold">
-                                <span>Technical Coordination</span>
-                                <span>Expert</span>
-                            </div>
-                            <div class="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
-                                <div class="bg-primary-600 h-full rounded-full" style="width: 82%;"></div>
-                            </div>
+                        <div class="flex items-center gap-2.5 text-sm font-medium text-slate-600 dark:text-slate-300">
+                            <i class="fa-solid fa-check-double text-primary-500"></i> Enemy AI &amp; behaviour systems
+                        </div>
+                        <div class="flex items-center gap-2.5 text-sm font-medium text-slate-600 dark:text-slate-300">
+                            <i class="fa-solid fa-check-double text-primary-500"></i> Physics loops &amp; pathfinding
+                        </div>
+                        <div class="flex items-center gap-2.5 text-sm font-medium text-slate-600 dark:text-slate-300">
+                            <i class="fa-solid fa-check-double text-primary-500"></i> Game design &amp; prototyping
                         </div>
                     </div>
                 </div>
 
+                <!-- Functional Skill: Web Development -->
+                <div class="bg-white dark:bg-neutral-900 p-8 rounded-2xl border border-slate-200/60 dark:border-neutral-800 shadow-sm">
+                    <div class="p-3 bg-primary-50 dark:bg-primary-900/40 text-primary-600 dark:text-primary-400 rounded-xl w-fit mb-6">
+                        <i class="fa-solid fa-globe text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Web Development</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-2.5 text-sm font-medium text-slate-600 dark:text-slate-300">
+                            <i class="fa-solid fa-check-double text-primary-500"></i> Next.js (App Router, SSR)
+                        </div>
+                        <div class="flex items-center gap-2.5 text-sm font-medium text-slate-600 dark:text-slate-300">
+                            <i class="fa-solid fa-check-double text-primary-500"></i> MERN stack full-stack builds
+                        </div>
+                        <div class="flex items-center gap-2.5 text-sm font-medium text-slate-600 dark:text-slate-300">
+                            <i class="fa-solid fa-check-double text-primary-500"></i> REST APIs &amp; database design
+                        </div>
+                        <div class="flex items-center gap-2.5 text-sm font-medium text-slate-600 dark:text-slate-300">
+                            <i class="fa-solid fa-check-double text-primary-500"></i> Responsive UI &amp; Tailwind CSS
+                        </div>
+                        <div class="flex items-center gap-2.5 text-sm font-medium text-slate-600 dark:text-slate-300">
+                            <i class="fa-solid fa-check-double text-primary-500"></i> Deployment &amp; version control
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Functional Skill: Low Level & Graphics -->
+                <div class="bg-white dark:bg-neutral-900 p-8 rounded-2xl border border-slate-200/60 dark:border-neutral-800 shadow-sm">
+                    <div class="p-3 bg-primary-50 dark:bg-primary-900/40 text-primary-600 dark:text-primary-400 rounded-xl w-fit mb-6">
+                        <i class="fa-solid fa-microchip text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Low-Level &amp; Graphics</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-2.5 text-sm font-medium text-slate-600 dark:text-slate-300">
+                            <i class="fa-solid fa-check-double text-primary-500"></i> C++ development (OOP &amp; STL)
+                        </div>
+                        <div class="flex items-center gap-2.5 text-sm font-medium text-slate-600 dark:text-slate-300">
+                            <i class="fa-solid fa-check-double text-primary-500"></i> Pointers &amp; memory management
+                        </div>
+                        <div class="flex items-center gap-2.5 text-sm font-medium text-slate-600 dark:text-slate-300">
+                            <i class="fa-solid fa-check-double text-primary-500"></i> Data structures &amp; algorithms
+                        </div>
+                        <div class="flex items-center gap-2.5 text-sm font-medium text-slate-600 dark:text-slate-300">
+                            <i class="fa-solid fa-check-double text-primary-500"></i> GLSL / HLSL shader programming
+                        </div>
+                        <div class="flex items-center gap-2.5 text-sm font-medium text-slate-600 dark:text-slate-300">
+                            <i class="fa-solid fa-check-double text-primary-500"></i> Rendering pipeline fundamentals
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 mt-8">
                 <!-- Technologies & Frameworks -->
-                <div class="bg-white dark:bg-slate-800 p-8 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm">
-                    <div class="p-3 bg-primary-100 dark:bg-primary-900/40 text-primary-600 dark:text-primary-300 rounded-xl w-fit mb-6">
+                <div class="bg-white dark:bg-neutral-900 p-8 rounded-2xl border border-slate-200/60 dark:border-neutral-800 shadow-sm">
+                    <div class="p-3 bg-primary-50 dark:bg-primary-900/40 text-primary-600 dark:text-primary-400 rounded-xl w-fit mb-6">
                         <i class="fa-solid fa-code text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-4">Technologies Stack</h3>
                     <div class="flex flex-wrap gap-2.5">
-                        <span class="px-3 py-1.5 bg-slate-100 dark:bg-slate-700 hover:bg-primary-100 dark:hover:bg-primary-900/30 text-slate-800 dark:text-slate-200 text-xs font-semibold rounded-lg transition-colors">
+                        <span class="px-3 py-1.5 bg-slate-100 dark:bg-neutral-800 hover:bg-primary-50 dark:hover:bg-primary-900/30 text-slate-800 dark:text-slate-200 text-xs font-semibold rounded-lg transition-colors">
                             <i class="fa-brands fa-react text-sky-500 mr-1.5"></i> NextJS / React
                         </span>
-                        <span class="px-3 py-1.5 bg-slate-100 dark:bg-slate-700 hover:bg-primary-100 dark:hover:bg-primary-900/30 text-slate-800 dark:text-slate-200 text-xs font-semibold rounded-lg transition-colors">
+                        <span class="px-3 py-1.5 bg-slate-100 dark:bg-neutral-800 hover:bg-primary-50 dark:hover:bg-primary-900/30 text-slate-800 dark:text-slate-200 text-xs font-semibold rounded-lg transition-colors">
                             <i class="fa-brands fa-node-js text-green-500 mr-1.5"></i> JavaScript / TS
                         </span>
-                        <span class="px-3 py-1.5 bg-slate-100 dark:bg-slate-700 hover:bg-primary-100 dark:hover:bg-primary-900/30 text-slate-800 dark:text-slate-200 text-xs font-semibold rounded-lg transition-colors">
+                        <span class="px-3 py-1.5 bg-slate-100 dark:bg-neutral-800 hover:bg-primary-50 dark:hover:bg-primary-900/30 text-slate-800 dark:text-slate-200 text-xs font-semibold rounded-lg transition-colors">
                             <i class="fa-brands fa-html5 text-orange-500 mr-1.5"></i> Tailwind CSS & HTML5
                         </span>
-                        <span class="px-3 py-1.5 bg-slate-100 dark:bg-slate-700 hover:bg-primary-100 dark:hover:bg-primary-900/30 text-slate-800 dark:text-slate-200 text-xs font-semibold rounded-lg transition-colors">
-                            <i class="fa-solid fa-gamepad text-purple-500 mr-1.5"></i> Godot (2D Game Engine)
+                        <span class="px-3 py-1.5 bg-slate-100 dark:bg-neutral-800 hover:bg-primary-50 dark:hover:bg-primary-900/30 text-slate-800 dark:text-slate-200 text-xs font-semibold rounded-lg transition-colors">
+                            <i class="fa-solid fa-gamepad text-primary-500 mr-1.5"></i> Unity / Godot
                         </span>
-                        <span class="px-3 py-1.5 bg-slate-100 dark:bg-slate-700 hover:bg-primary-100 dark:hover:bg-primary-900/30 text-slate-800 dark:text-slate-200 text-xs font-semibold rounded-lg transition-colors">
-                            <i class="fa-brands fa-git-alt text-red-500 mr-1.5"></i> Git & GitHub Deployment
+                        <span class="px-3 py-1.5 bg-slate-100 dark:bg-neutral-800 hover:bg-primary-50 dark:hover:bg-primary-900/30 text-slate-800 dark:text-slate-200 text-xs font-semibold rounded-lg transition-colors">
+                            <i class="fa-solid fa-microchip text-primary-500 mr-1.5"></i> C++ / GLSL
                         </span>
-                        <span class="px-3 py-1.5 bg-slate-100 dark:bg-slate-700 hover:bg-primary-100 dark:hover:bg-primary-900/30 text-slate-800 dark:text-slate-200 text-xs font-semibold rounded-lg transition-colors">
+                        <span class="px-3 py-1.5 bg-slate-100 dark:bg-neutral-800 hover:bg-primary-50 dark:hover:bg-primary-900/30 text-slate-800 dark:text-slate-200 text-xs font-semibold rounded-lg transition-colors">
+                            <i class="fa-brands fa-git-alt text-red-500 mr-1.5"></i> Git &amp; GitHub Deployment
+                        </span>
+                        <span class="px-3 py-1.5 bg-slate-100 dark:bg-neutral-800 hover:bg-primary-50 dark:hover:bg-primary-900/30 text-slate-800 dark:text-slate-200 text-xs font-semibold rounded-lg transition-colors">
                             <i class="fa-solid fa-database text-blue-500 mr-1.5"></i> SQL Databases
                         </span>
                     </div>
                 </div>
 
+                <!-- Languages -->
+                <div id="languages" class="scroll-mt-24 bg-white dark:bg-neutral-900 p-8 rounded-2xl border border-slate-200/60 dark:border-neutral-800 shadow-sm">
+                    <div class="p-3 bg-primary-50 dark:bg-primary-900/40 text-primary-600 dark:text-primary-400 rounded-xl w-fit mb-6">
+                        <i class="fa-solid fa-code text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Languages</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3">
+                            <span class="w-9 h-9 rounded-lg bg-primary-50 dark:bg-primary-900/40 text-primary-600 dark:text-primary-400 flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-terminal"></i>
+                            </span>
+                            <div class="flex-1 flex items-center justify-between gap-3">
+                                <span class="text-sm font-semibold">C++</span>
+                                <span class="text-xs text-slate-400 dark:text-neutral-500">Systems &amp; graphics</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="w-9 h-9 rounded-lg bg-primary-50 dark:bg-primary-900/40 text-primary-600 dark:text-primary-400 flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-hashtag"></i>
+                            </span>
+                            <div class="flex-1 flex items-center justify-between gap-3">
+                                <span class="text-sm font-semibold">C#</span>
+                                <span class="text-xs text-slate-400 dark:text-neutral-500">Unity gameplay</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="w-9 h-9 rounded-lg bg-yellow-500/10 text-yellow-500 flex items-center justify-center shrink-0">
+                                <i class="fa-brands fa-js"></i>
+                            </span>
+                            <div class="flex-1 flex items-center justify-between gap-3">
+                                <span class="text-sm font-semibold">JavaScript</span>
+                                <span class="text-xs text-slate-400 dark:text-neutral-500">Full-stack &amp; scripting</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="w-9 h-9 rounded-lg bg-sky-500/10 text-sky-500 flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-file-code"></i>
+                            </span>
+                            <div class="flex-1 flex items-center justify-between gap-3">
+                                <span class="text-sm font-semibold">TypeScript</span>
+                                <span class="text-xs text-slate-400 dark:text-neutral-500">Typed Next.js apps</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="w-9 h-9 rounded-lg bg-primary-50 dark:bg-primary-900/40 text-primary-600 dark:text-primary-400 flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-gamepad"></i>
+                            </span>
+                            <div class="flex-1 flex items-center justify-between gap-3">
+                                <span class="text-sm font-semibold">GDScript</span>
+                                <span class="text-xs text-slate-400 dark:text-neutral-500">Godot scripting</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="w-9 h-9 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center shrink-0">
+                                <i class="fa-brands fa-python"></i>
+                            </span>
+                            <div class="flex-1 flex items-center justify-between gap-3">
+                                <span class="text-sm font-semibold">Python</span>
+                                <span class="text-xs text-slate-400 dark:text-neutral-500">Automation &amp; tooling</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Professional & Interpersonal Communication -->
-                <div class="bg-white dark:bg-slate-800 p-8 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-sm">
-                    <div class="p-3 bg-primary-100 dark:bg-primary-900/40 text-primary-600 dark:text-primary-300 rounded-xl w-fit mb-6">
+                <div class="bg-white dark:bg-neutral-900 p-8 rounded-2xl border border-slate-200/60 dark:border-neutral-800 shadow-sm">
+                    <div class="p-3 bg-primary-50 dark:bg-primary-900/40 text-primary-600 dark:text-primary-400 rounded-xl w-fit mb-6">
                         <i class="fa-solid fa-comments text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-4">Communication</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-4">
+                    <p class="text-slate-500 dark:text-neutral-400 text-sm leading-relaxed mb-4">
                         Respectful and direct communicator. Confident and professional speaking skills. A dedicated listener and a seamless team player.
                     </p>
                     <div class="space-y-3">
                         <div class="flex items-center gap-2.5 text-sm font-medium">
-                            <i class="fa-solid fa-check-double text-primary-500"></i> Direct & Clear Interaction
+                            <i class="fa-solid fa-check-double text-primary-500"></i> Direct &amp; Clear Interaction
                         </div>
                         <div class="flex items-center gap-2.5 text-sm font-medium">
-                            <i class="fa-solid fa-check-double text-primary-500"></i> Active Listening & Synergy
+                            <i class="fa-solid fa-check-double text-primary-500"></i> Active Listening &amp; Synergy
                         </div>
                         <div class="flex items-center gap-2.5 text-sm font-medium">
-                            <i class="fa-solid fa-check-double text-primary-500"></i> Presentation & Public Speaking
+                            <i class="fa-solid fa-check-double text-primary-500"></i> Presentation &amp; Public Speaking
                         </div>
                     </div>
                 </div>
@@ -393,19 +546,19 @@
     </section>
 
     <!-- Projects Section -->
-    <section id="projects" class="py-20 bg-white dark:bg-slate-900/50">
+    <section id="projects" class="py-20 bg-white dark:bg-neutral-950">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-16">
                 <span class="text-xs font-bold tracking-wider text-primary-600 dark:text-primary-400 uppercase">My Work</span>
                 <h2 class="text-3xl sm:text-4xl font-extrabold mt-2">Personal Projects Showcase</h2>
                 <div class="w-16 h-1 bg-primary-600 mx-auto mt-4 rounded-full"></div>
-                <p class="text-slate-500 dark:text-slate-400 text-sm mt-4">Selected full-stack web applications and robust games built using modern developer frameworks.</p>
+                <p class="text-slate-500 dark:text-neutral-400 text-sm mt-4">Selected full-stack web applications and robust games built using modern developer frameworks.</p>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-8">
+            <div class="grid md:grid-cols-2 gap-8">
                 <!-- Project Card 1: LawSite -->
-                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col group overflow-hidden">
-                    <div class="h-48 bg-gradient-to-tr from-slate-900 to-indigo-950 p-6 flex flex-col justify-between text-white relative">
+                <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-slate-200 dark:border-neutral-800 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col group overflow-hidden">
+                    <div class="h-48 bg-gradient-to-tr from-black to-red-950 p-6 flex flex-col justify-between text-white relative">
                         <span class="text-xs uppercase tracking-wider font-bold bg-primary-600 px-2.5 py-1 rounded-full self-start">Next.js Fullstack</span>
                         <div class="flex items-center justify-between">
                             <h3 class="text-2xl font-extrabold">LawSite</h3>
@@ -414,17 +567,17 @@
                     </div>
                     <div class="p-6 flex-grow flex flex-col justify-between">
                         <div>
-                            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6">
+                            <p class="text-slate-500 dark:text-neutral-400 text-sm leading-relaxed mb-6">
                                 A comprehensive, production-ready Full-Stack NextJs application designed for legal firms or individual practitioners, helping streamline client acquisition and showcasing legal services.
                             </p>
                         </div>
                         <div class="space-y-4">
                             <div class="flex flex-wrap gap-1.5">
-                                <span class="px-2 py-0.5 bg-slate-100 dark:bg-slate-700 text-xs font-semibold rounded">Next.js</span>
-                                <span class="px-2 py-0.5 bg-slate-100 dark:bg-slate-700 text-xs font-semibold rounded">React</span>
-                                <span class="px-2 py-0.5 bg-slate-100 dark:bg-slate-700 text-xs font-semibold rounded">TailwindCSS</span>
+                                <span class="px-2 py-0.5 bg-slate-100 dark:bg-neutral-800 text-xs font-semibold rounded">Next.js</span>
+                                <span class="px-2 py-0.5 bg-slate-100 dark:bg-neutral-800 text-xs font-semibold rounded">React</span>
+                                <span class="px-2 py-0.5 bg-slate-100 dark:bg-neutral-800 text-xs font-semibold rounded">TailwindCSS</span>
                             </div>
-                            <div class="pt-4 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between">
+                            <div class="pt-4 border-t border-slate-100 dark:border-neutral-800/60 flex items-center justify-between">
                                 <a href="https://github.com/Kaklio" target="_blank" class="text-slate-500 hover:text-primary-600 text-sm flex items-center gap-1.5">
                                     <i class="fa-brands fa-github text-base"></i> Codebase
                                 </a>
@@ -437,8 +590,8 @@
                 </div>
 
                 <!-- Project Card 2: MedSite -->
-                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col group overflow-hidden">
-                    <div class="h-48 bg-gradient-to-tr from-slate-900 to-emerald-950 p-6 flex flex-col justify-between text-white relative">
+                <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-slate-200 dark:border-neutral-800 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col group overflow-hidden">
+                    <div class="h-48 bg-gradient-to-tr from-black to-emerald-950 p-6 flex flex-col justify-between text-white relative">
                         <span class="text-xs uppercase tracking-wider font-bold bg-green-600 px-2.5 py-1 rounded-full self-start">Next.js Fullstack</span>
                         <div class="flex items-center justify-between">
                             <h3 class="text-2xl font-extrabold">MedSite</h3>
@@ -447,17 +600,17 @@
                     </div>
                     <div class="p-6 flex-grow flex flex-col justify-between">
                         <div>
-                            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6">
+                            <p class="text-slate-500 dark:text-neutral-400 text-sm leading-relaxed mb-6">
                                 An intuitive Healthcare Full-Stack application powered by NextJs. Offers smooth client-side rendering for clinic directories, patient consultation layouts, and professional content presentation.
                             </p>
                         </div>
                         <div class="space-y-4">
                             <div class="flex flex-wrap gap-1.5">
-                                <span class="px-2 py-0.5 bg-slate-100 dark:bg-slate-700 text-xs font-semibold rounded">Next.js</span>
-                                <span class="px-2 py-0.5 bg-slate-100 dark:bg-slate-700 text-xs font-semibold rounded">React</span>
-                                <span class="px-2 py-0.5 bg-slate-100 dark:bg-slate-700 text-xs font-semibold rounded">Vercel Deployment</span>
+                                <span class="px-2 py-0.5 bg-slate-100 dark:bg-neutral-800 text-xs font-semibold rounded">Next.js</span>
+                                <span class="px-2 py-0.5 bg-slate-100 dark:bg-neutral-800 text-xs font-semibold rounded">React</span>
+                                <span class="px-2 py-0.5 bg-slate-100 dark:bg-neutral-800 text-xs font-semibold rounded">Vercel Deployment</span>
                             </div>
-                            <div class="pt-4 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between">
+                            <div class="pt-4 border-t border-slate-100 dark:border-neutral-800/60 flex items-center justify-between">
                                 <a href="https://github.com/Kaklio" target="_blank" class="text-slate-500 hover:text-primary-600 text-sm flex items-center gap-1.5">
                                     <i class="fa-brands fa-github text-base"></i> Codebase
                                 </a>
@@ -470,9 +623,9 @@
                 </div>
 
                 <!-- Project Card 3: Blob Attack -->
-                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col group overflow-hidden">
-                    <div class="h-48 bg-gradient-to-tr from-slate-900 to-rose-950 p-6 flex flex-col justify-between text-white relative">
-                        <span class="text-xs uppercase tracking-wider font-bold bg-rose-600 px-2.5 py-1 rounded-full self-start">Game Development</span>
+                <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-slate-200 dark:border-neutral-800 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col group overflow-hidden">
+                    <div class="h-48 bg-gradient-to-tr from-black to-rose-950 p-6 flex flex-col justify-between text-white relative">
+                        <span class="text-xs uppercase tracking-wider font-bold bg-primary-600 px-2.5 py-1 rounded-full self-start">Game Development</span>
                         <div class="flex items-center justify-between">
                             <h3 class="text-2xl font-extrabold">Blob Attack</h3>
                             <i class="fa-solid fa-gamepad text-3xl opacity-30 group-hover:opacity-100 transition-opacity"></i>
@@ -480,22 +633,70 @@
                     </div>
                     <div class="p-6 flex-grow flex flex-col justify-between">
                         <div>
-                            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6">
+                            <p class="text-slate-500 dark:text-neutral-400 text-sm leading-relaxed mb-6">
                                 A vibrant, highly engaging 2D Strategy Game coded and built inside the Godot Engine. Features state machines, clean pathfinding, responsive physics loops, and custom tactical mechanics.
                             </p>
                         </div>
                         <div class="space-y-4">
                             <div class="flex flex-wrap gap-1.5">
-                                <span class="px-2 py-0.5 bg-slate-100 dark:bg-slate-700 text-xs font-semibold rounded">Godot Engine</span>
-                                <span class="px-2 py-0.5 bg-slate-100 dark:bg-slate-700 text-xs font-semibold rounded">GDScript</span>
-                                <span class="px-2 py-0.5 bg-slate-100 dark:bg-slate-700 text-xs font-semibold rounded">Game Design</span>
+                                <span class="px-2 py-0.5 bg-slate-100 dark:bg-neutral-800 text-xs font-semibold rounded">Godot Engine</span>
+                                <span class="px-2 py-0.5 bg-slate-100 dark:bg-neutral-800 text-xs font-semibold rounded">GDScript</span>
+                                <span class="px-2 py-0.5 bg-slate-100 dark:bg-neutral-800 text-xs font-semibold rounded">Game Design</span>
                             </div>
-                            <div class="pt-4 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between">
+                            <div class="pt-4 border-t border-slate-100 dark:border-neutral-800/60 flex items-center justify-between">
                                 <a href="https://github.com/Kaklio" target="_blank" class="text-slate-500 hover:text-primary-600 text-sm flex items-center gap-1.5">
                                     <i class="fa-brands fa-github text-base"></i> Codebase
                                 </a>
-                                <span class="inline-flex items-center gap-1 text-slate-400 text-xs font-medium bg-slate-100 dark:bg-slate-700/50 px-2 py-1 rounded">
+                                <span class="inline-flex items-center gap-1 text-slate-400 text-xs font-medium bg-slate-100 dark:bg-neutral-800/50 px-2 py-1 rounded">
                                     <i class="fa-solid fa-check"></i> Godot Executable
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Card 4: Virus Clash -->
+                <div class="bg-white dark:bg-neutral-900 rounded-2xl border border-slate-200 dark:border-neutral-800 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col group overflow-hidden">
+                    <div class="h-48 bg-gradient-to-tr from-black to-red-950 p-6 flex flex-col justify-between text-white relative">
+                        <span class="text-xs uppercase tracking-wider font-bold bg-primary-600 px-2.5 py-1 rounded-full self-start">Unity 6 &amp; C#</span>
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-2xl font-extrabold">Virus Clash</h3>
+                            <i class="fa-solid fa-virus text-3xl opacity-30 group-hover:opacity-100 transition-opacity"></i>
+                        </div>
+                    </div>
+                    <div class="p-6 flex-grow flex flex-col justify-between">
+                        <div>
+                            <p class="text-slate-500 dark:text-neutral-400 text-sm leading-relaxed mb-6">
+                                A 2D real-time strategy game built in Unity 6 with the URP 2D Renderer. Player bases generate points and conquer enemy territory by launching point-carrying projectiles across a navmesh-baked arena of organic biological obstacles.
+                            </p>
+                            <ul class="space-y-2 text-sm text-slate-500 dark:text-neutral-400">
+                                <li class="flex items-start gap-2.5">
+                                    <i class="fa-solid fa-check-double text-primary-500 mt-1"></i>
+                                    Custom HLSL shaders: liquid-fill blobs, procedural veins &amp; animated cells
+                                </li>
+                                <li class="flex items-start gap-2.5">
+                                    <i class="fa-solid fa-check-double text-primary-500 mt-1"></i>
+                                    Prefab-based upgrade trees, blob conquest logic and enemy AI
+                                </li>
+                                <li class="flex items-start gap-2.5">
+                                    <i class="fa-solid fa-check-double text-primary-500 mt-1"></i>
+                                    URP 2D lighting, tilemaps, NavMeshPlus navigation &amp; full audio pass
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="flex flex-wrap gap-1.5">
+                                <span class="px-2 py-0.5 bg-slate-100 dark:bg-neutral-800 text-xs font-semibold rounded">Unity 6</span>
+                                <span class="px-2 py-0.5 bg-slate-100 dark:bg-neutral-800 text-xs font-semibold rounded">C#</span>
+                                <span class="px-2 py-0.5 bg-slate-100 dark:bg-neutral-800 text-xs font-semibold rounded">URP 2D</span>
+                                <span class="px-2 py-0.5 bg-slate-100 dark:bg-neutral-800 text-xs font-semibold rounded">HLSL</span>
+                            </div>
+                            <div class="pt-4 border-t border-slate-100 dark:border-neutral-800/60 flex items-center justify-between">
+                                <a href="https://github.com/Kaklio" target="_blank" class="text-slate-500 hover:text-primary-600 text-sm flex items-center gap-1.5">
+                                    <i class="fa-brands fa-github text-base"></i> Codebase
+                                </a>
+                                <span class="inline-flex items-center gap-1 text-slate-400 text-xs font-medium bg-slate-100 dark:bg-neutral-800/50 px-2 py-1 rounded">
+                                    <i class="fa-solid fa-check"></i> Windows Build
                                 </span>
                             </div>
                         </div>
@@ -506,7 +707,7 @@
     </section>
 
     <!-- Education Timeline Section -->
-    <section id="education" class="py-20 bg-slate-50 dark:bg-slate-900">
+    <section id="education" class="py-20 bg-slate-50 dark:bg-black">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-16">
                 <span class="text-xs font-bold tracking-wider text-primary-600 dark:text-primary-400 uppercase">My Journey</span>
@@ -516,22 +717,22 @@
 
             <div class="max-w-4xl mx-auto relative">
                 <!-- Vertical Timeline Line -->
-                <div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-slate-200 dark:bg-slate-800 -translate-x-1/2"></div>
+                <div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-slate-200 dark:bg-neutral-800 -translate-x-1/2"></div>
 
                 <!-- Education Node 1: Bachelors -->
                 <div class="relative flex flex-col md:flex-row gap-8 md:gap-0 items-start md:items-center mb-12">
                     <!-- Marker Circle -->
-                    <div class="absolute left-4 md:left-1/2 w-6 h-6 rounded-full bg-primary-600 border-4 border-white dark:border-slate-900 -translate-x-1/2 z-10"></div>
+                    <div class="absolute left-4 md:left-1/2 w-6 h-6 rounded-full bg-primary-600 border-4 border-white dark:border-black -translate-x-1/2 z-10"></div>
                     
                     <!-- Content Block Left -->
                     <div class="w-full md:w-1/2 pl-12 md:pl-0 md:pr-12 md:text-right">
-                        <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm inline-block w-full">
-                            <span class="inline-block px-3 py-1 bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-300 rounded-full text-xs font-bold mb-3 uppercase">Graduating Soon</span>
+                        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-slate-200 dark:border-neutral-800 shadow-sm inline-block w-full">
+                            <span class="inline-block px-3 py-1 bg-primary-50 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 rounded-full text-xs font-bold mb-3 uppercase">Graduating Soon</span>
                             <h3 class="text-lg font-bold">BS in Information Technology</h3>
-                            <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Govt College Sheikhupura</p>
-                            <span class="text-xs text-slate-400 dark:text-slate-500 block mt-0.5">(Punjab University Affiliated)</span>
+                            <p class="text-slate-500 dark:text-neutral-400 text-sm mt-1">Govt College Sheikhupura</p>
+                            <span class="text-xs text-slate-400 dark:text-neutral-500 block mt-0.5">(Punjab University Affiliated)</span>
                             <div class="mt-4 flex items-center md:justify-end gap-2 text-primary-600 dark:text-primary-400 font-bold text-sm">
-                                <i class="fa-solid fa-star"></i> CGPA: 3.0 / 4.00
+                                <i class="fa-solid fa-code"></i> Software Engineering Focus
                             </div>
                         </div>
                     </div>
@@ -545,16 +746,16 @@
                     <div class="hidden md:block w-1/2"></div>
                     
                     <!-- Marker Circle -->
-                    <div class="absolute left-4 md:left-1/2 w-6 h-6 rounded-full bg-slate-400 border-4 border-white dark:border-slate-900 -translate-x-1/2 z-10"></div>
+                    <div class="absolute left-4 md:left-1/2 w-6 h-6 rounded-full bg-neutral-400 dark:bg-neutral-600 border-4 border-white dark:border-black -translate-x-1/2 z-10"></div>
                     
                     <!-- Content Block Right -->
                     <div class="w-full md:w-1/2 pl-12 md:pl-12">
-                        <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm inline-block w-full">
-                            <span class="inline-block px-3 py-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-full text-xs font-bold mb-3 uppercase">Completed</span>
+                        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-slate-200 dark:border-neutral-800 shadow-sm inline-block w-full">
+                            <span class="inline-block px-3 py-1 bg-slate-100 dark:bg-neutral-800 text-slate-600 dark:text-slate-300 rounded-full text-xs font-bold mb-3 uppercase">Completed</span>
                             <h3 class="text-lg font-bold">I.C.S (Intermediate in Computer Science)</h3>
-                            <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Govt College Sheikhupura</p>
-                            <div class="mt-4 flex items-center gap-2 text-green-600 dark:text-green-400 font-bold text-sm">
-                                <i class="fa-solid fa-chart-line"></i> Percentage: 77%
+                            <p class="text-slate-500 dark:text-neutral-400 text-sm mt-1">Govt College Sheikhupura</p>
+                            <div class="mt-4 flex items-center gap-2 text-primary-600 dark:text-primary-400 font-bold text-sm">
+                                <i class="fa-solid fa-microchip"></i> Computer Science Focus
                             </div>
                         </div>
                     </div>
@@ -563,16 +764,16 @@
                 <!-- Education Node 3: Matriculation -->
                 <div class="relative flex flex-col md:flex-row gap-8 md:gap-0 items-start md:items-center">
                     <!-- Marker Circle -->
-                    <div class="absolute left-4 md:left-1/2 w-6 h-6 rounded-full bg-slate-400 border-4 border-white dark:border-slate-900 -translate-x-1/2 z-10"></div>
+                    <div class="absolute left-4 md:left-1/2 w-6 h-6 rounded-full bg-neutral-400 dark:bg-neutral-600 border-4 border-white dark:border-black -translate-x-1/2 z-10"></div>
                     
                     <!-- Content Block Left -->
                     <div class="w-full md:w-1/2 pl-12 md:pl-0 md:pr-12 md:text-right">
-                        <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm inline-block w-full">
-                            <span class="inline-block px-3 py-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-full text-xs font-bold mb-3 uppercase">Completed</span>
+                        <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-slate-200 dark:border-neutral-800 shadow-sm inline-block w-full">
+                            <span class="inline-block px-3 py-1 bg-slate-100 dark:bg-neutral-800 text-slate-600 dark:text-slate-300 rounded-full text-xs font-bold mb-3 uppercase">Completed</span>
                             <h3 class="text-lg font-bold">Matriculation (Science)</h3>
-                            <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">National Model Higher Secondary School</p>
-                            <div class="mt-4 flex items-center md:justify-end gap-2 text-green-600 dark:text-green-400 font-bold text-sm">
-                                <i class="fa-solid fa-chart-line"></i> Percentage: 82%
+                            <p class="text-slate-500 dark:text-neutral-400 text-sm mt-1">National Model Higher Secondary School</p>
+                            <div class="mt-4 flex items-center md:justify-end gap-2 text-primary-600 dark:text-primary-400 font-bold text-sm">
+                                <i class="fa-solid fa-flask"></i> Science Stream
                             </div>
                         </div>
                     </div>
@@ -584,7 +785,7 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="py-20 bg-white dark:bg-slate-900/50">
+    <section id="contact" class="py-20 bg-white dark:bg-neutral-950">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-16">
                 <span class="text-xs font-bold tracking-wider text-primary-600 dark:text-primary-400 uppercase">Get In Touch</span>
@@ -596,13 +797,13 @@
                 <!-- Info block -->
                 <div class="lg:col-span-5 space-y-6">
                     <h3 class="text-2xl font-bold">Let's talk about your opportunities!</h3>
-                    <p class="text-slate-500 dark:text-slate-400 leading-relaxed text-sm">
+                    <p class="text-slate-500 dark:text-neutral-400 leading-relaxed text-sm">
                         I am currently looking for suitable software engineer internships, junior-level developer jobs, or remote work opportunities. Drop a message or contact me directly through any channel below.
                     </p>
 
                     <div class="space-y-4 pt-4">
-                        <div class="flex items-start gap-4 p-4 bg-slate-50 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700/50 rounded-xl">
-                            <span class="p-3 bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-300 rounded-lg">
+                        <div class="flex items-start gap-4 p-4 bg-slate-50 dark:bg-neutral-950 border border-slate-200/50 dark:border-neutral-800/60 rounded-xl">
+                            <span class="p-3 bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 rounded-lg">
                                 <i class="fa-solid fa-phone text-lg"></i>
                             </span>
                             <div>
@@ -611,8 +812,8 @@
                             </div>
                         </div>
 
-                        <div class="flex items-start gap-4 p-4 bg-slate-50 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700/50 rounded-xl">
-                            <span class="p-3 bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-300 rounded-lg">
+                        <div class="flex items-start gap-4 p-4 bg-slate-50 dark:bg-neutral-950 border border-slate-200/50 dark:border-neutral-800/60 rounded-xl">
+                            <span class="p-3 bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 rounded-lg">
                                 <i class="fa-solid fa-envelope text-lg"></i>
                             </span>
                             <div>
@@ -621,8 +822,8 @@
                             </div>
                         </div>
 
-                        <div class="flex items-start gap-4 p-4 bg-slate-50 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700/50 rounded-xl">
-                            <span class="p-3 bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-300 rounded-lg">
+                        <div class="flex items-start gap-4 p-4 bg-slate-50 dark:bg-neutral-950 border border-slate-200/50 dark:border-neutral-800/60 rounded-xl">
+                            <span class="p-3 bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 rounded-lg">
                                 <i class="fa-solid fa-map-location-dot text-lg"></i>
                             </span>
                             <div>
@@ -636,32 +837,32 @@
                 </div>
 
                 <!-- Contact form interactive simulator -->
-                <div class="lg:col-span-7 bg-white dark:bg-slate-800 p-8 rounded-2xl border border-slate-200/75 dark:border-slate-700/75 shadow-lg">
+                <div class="lg:col-span-7 bg-white dark:bg-neutral-900 p-8 rounded-2xl border border-slate-200/75 dark:border-neutral-800/75 shadow-lg">
                     <h3 class="text-lg font-bold mb-6">Send Me A Quick Message</h3>
                     
                     <form id="contactForm" class="space-y-5" onsubmit="handleContactSubmit(event)">
                         <div class="grid sm:grid-cols-2 gap-5">
                             <div class="space-y-1.5">
                                 <label for="form_name" class="text-xs font-bold uppercase text-slate-400">Your Name</label>
-                                <input type="text" id="form_name" required class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-xl text-sm transition-all" placeholder="John Doe">
+                                <input type="text" id="form_name" required class="w-full px-4 py-3 bg-slate-50 dark:bg-black border border-slate-200 dark:border-neutral-800 focus:outline-none focus:ring-2 focus:ring-primary-600 rounded-xl text-sm transition-all" placeholder="John Doe">
                             </div>
                             <div class="space-y-1.5">
                                 <label for="form_email" class="text-xs font-bold uppercase text-slate-400">Email Address</label>
-                                <input type="email" id="form_email" required class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-xl text-sm transition-all" placeholder="john@example.com">
+                                <input type="email" id="form_email" required class="w-full px-4 py-3 bg-slate-50 dark:bg-black border border-slate-200 dark:border-neutral-800 focus:outline-none focus:ring-2 focus:ring-primary-600 rounded-xl text-sm transition-all" placeholder="john@example.com">
                             </div>
                         </div>
 
                         <div class="space-y-1.5">
                             <label for="form_subject" class="text-xs font-bold uppercase text-slate-400">Subject</label>
-                            <input type="text" id="form_subject" required class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-xl text-sm transition-all" placeholder="Opportunities, Freelance, Collaboration">
+                            <input type="text" id="form_subject" required class="w-full px-4 py-3 bg-slate-50 dark:bg-black border border-slate-200 dark:border-neutral-800 focus:outline-none focus:ring-2 focus:ring-primary-600 rounded-xl text-sm transition-all" placeholder="Opportunities, Freelance, Collaboration">
                         </div>
 
                         <div class="space-y-1.5">
                             <label for="form_message" class="text-xs font-bold uppercase text-slate-400">Message Text</label>
-                            <textarea id="form_message" required rows="4" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-xl text-sm transition-all resize-none" placeholder="Write details here..."></textarea>
+                            <textarea id="form_message" required rows="4" class="w-full px-4 py-3 bg-slate-50 dark:bg-black border border-slate-200 dark:border-neutral-800 focus:outline-none focus:ring-2 focus:ring-primary-600 rounded-xl text-sm transition-all resize-none" placeholder="Write details here..."></textarea>
                         </div>
 
-                        <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-primary-600 hover:bg-primary-700 text-white font-bold uppercase tracking-wider text-xs rounded-xl shadow-lg shadow-primary-500/10 transition-colors">
+                        <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-primary-600 hover:bg-primary-700 text-white font-bold uppercase tracking-wider text-xs rounded-xl shadow-lg shadow-primary-600/10 transition-colors">
                             Send Secure Email Link <i class="fa-solid fa-paper-plane"></i>
                         </button>
                     </form>
@@ -681,133 +882,13 @@
         </div>
     </section>
 
-    <!-- Custom PDF / Print Layout (Visible ONLY on Print page action) -->
-    <section class="hidden print-layout py-8 px-10">
-        <div class="border-b border-slate-300 pb-6 mb-6">
-            <h1 class="text-3xl font-black text-slate-900">Aoun Hussain</h1>
-            <p class="text-lg font-bold text-slate-600 mt-1">Software Engineer | BS IT Graduate</p>
-            <div class="flex flex-wrap gap-4 mt-3 text-sm text-slate-600">
-                <span><i class="fa-solid fa-phone"></i> +92 3364550511</span>
-                <span><i class="fa-solid fa-envelope"></i> aounhussainshah@gmail.com</span>
-                <span><i class="fa-solid fa-location-dot"></i> Abdullah Shah Street, Khalid Road, Sheikhupura</span>
-                <span><i class="fa-brands fa-github"></i> github.com/Kaklio</span>
-                <span><i class="fa-brands fa-linkedin"></i> linkedin.com/in/aoun-hussain-1433b138a</span>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-12 gap-6">
-            <div class="col-span-8 space-y-6">
-                <!-- Objective / Profile Summary -->
-                <div>
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-slate-900 border-b-2 border-slate-300 pb-1 mb-2">Professional Summary</h3>
-                    <p class="text-sm text-slate-700 leading-relaxed">
-                        Passionate and rigorous IT student. Highly interested in building, coding, and designing quality products. Gained solid foundational skills in software development through building and testing major web applications and game systems.
-                    </p>
-                </div>
-
-                <!-- Projects -->
-                <div>
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-slate-900 border-b-2 border-slate-300 pb-1 mb-2">Projects Showcase</h3>
-                    <div class="space-y-4">
-                        <div class="print-card p-3 rounded-lg bg-slate-50 border border-slate-200">
-                            <div class="flex justify-between items-center">
-                                <h4 class="font-bold text-sm">LawSite (Next.js Fullstack Legal Platform)</h4>
-                                <span class="text-xs text-slate-500">Live Web App</span>
-                            </div>
-                            <p class="text-xs text-slate-600 mt-1">Fullstack application designed to manage legal appointments and consultation listings.</p>
-                            <span class="text-[10px] text-primary-600 italic mt-1 block">Url: https://lawsite-g09rwf70y-kaklios-projects.vercel.app/</span>
-                        </div>
-                        <div class="print-card p-3 rounded-lg bg-slate-50 border border-slate-200">
-                            <div class="flex justify-between items-center">
-                                <h4 class="font-bold text-sm">MedSite (Next.js Healthcare Solution)</h4>
-                                <span class="text-xs text-slate-500">Live Web App</span>
-                            </div>
-                            <p class="text-xs text-slate-600 mt-1">Responsive client scheduling and dynamic health portal presentation template.</p>
-                            <span class="text-[10px] text-primary-600 italic mt-1 block">Url: https://medsite-inky.vercel.app/</span>
-                        </div>
-                        <div class="print-card p-3 rounded-lg bg-slate-50 border border-slate-200">
-                            <div class="flex justify-between items-center">
-                                <h4 class="font-bold text-sm">Blob Attack (2D Tactical Godot Strategy)</h4>
-                                <span class="text-xs text-slate-500">Desktop/Web Build</span>
-                            </div>
-                            <p class="text-xs text-slate-600 mt-1">2D game employing custom logic pathfinding and player controller states.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Education -->
-                <div>
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-slate-900 border-b-2 border-slate-300 pb-1 mb-2">Education Background</h3>
-                    <div class="space-y-3">
-                        <div>
-                            <div class="flex justify-between font-bold text-sm">
-                                <span>BS in Information Technology (PU Affiliated)</span>
-                                <span>CGPA 3.0</span>
-                            </div>
-                            <p class="text-xs text-slate-600">Govt College Sheikhupura</p>
-                        </div>
-                        <div>
-                            <div class="flex justify-between font-bold text-sm">
-                                <span>Intermediate (I.C.S)</span>
-                                <span>Percentage: 77%</span>
-                            </div>
-                            <p class="text-xs text-slate-600">Govt College Sheikhupura</p>
-                        </div>
-                        <div>
-                            <div class="flex justify-between font-bold text-sm">
-                                <span>Matriculation (Science)</span>
-                                <span>Percentage: 82%</span>
-                            </div>
-                            <p class="text-xs text-slate-600">National Model Higher Secondary School</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Sidebar -->
-            <div class="col-span-4 space-y-6">
-                <!-- Functional Skills list -->
-                <div>
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-slate-900 border-b-2 border-slate-300 pb-1 mb-2">Functional Skills</h3>
-                    <ul class="text-xs space-y-1.5 text-slate-700 list-disc list-inside">
-                        <li>Software Development</li>
-                        <li>Project Management</li>
-                        <li>Technical Coordination</li>
-                    </ul>
-                </div>
-
-                <!-- Tech stacks listed -->
-                <div>
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-slate-900 border-b-2 border-slate-300 pb-1 mb-2">Technical Competence</h3>
-                    <div class="flex flex-wrap gap-1">
-                        <span class="text-[11px] bg-slate-100 border border-slate-200 px-2 py-0.5 rounded">Next.js / React</span>
-                        <span class="text-[11px] bg-slate-100 border border-slate-200 px-2 py-0.5 rounded">TypeScript</span>
-                        <span class="text-[11px] bg-slate-100 border border-slate-200 px-2 py-0.5 rounded">Tailwind CSS</span>
-                        <span class="text-[11px] bg-slate-100 border border-slate-200 px-2 py-0.5 rounded">Godot Engine</span>
-                        <span class="text-[11px] bg-slate-100 border border-slate-200 px-2 py-0.5 rounded">SQL / Git</span>
-                    </div>
-                </div>
-
-                <!-- Communication list -->
-                <div>
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-slate-900 border-b-2 border-slate-300 pb-1 mb-2">Core Attributes</h3>
-                    <ul class="text-xs space-y-1 text-slate-600 list-disc list-inside">
-                        <li>Respectful & direct speaker</li>
-                        <li>Collaborative team player</li>
-                        <li>Professional public presentation</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Footer Section -->
-    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 no-print">
+    <footer class="bg-black text-neutral-400 py-12 border-t border-neutral-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
                 <div>
-                    <span class="text-xl font-black bg-gradient-to-r from-primary-400 to-indigo-400 bg-clip-text text-transparent">AH.</span>
-                    <p class="text-xs mt-2 text-slate-500">© 2026 Aoun Hussain. Built with rigorous design aesthetics & Tailwind CSS.</p>
+                    <span class="text-xl font-black bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">AH.</span>
+                    <p class="text-xs mt-2 text-neutral-500">© 2026 Aoun Hussain. Built with rigorous design aesthetics &amp; Tailwind CSS.</p>
                 </div>
                 
                 <!-- Quick links back home -->
@@ -815,6 +896,7 @@
                     <a href="#home" class="hover:text-white transition-colors">Home</a>
                     <a href="#about" class="hover:text-white transition-colors">About</a>
                     <a href="#skills" class="hover:text-white transition-colors">Skills</a>
+                    <a href="#languages" class="hover:text-white transition-colors">Languages</a>
                     <a href="#projects" class="hover:text-white transition-colors">Projects</a>
                     <a href="#contact" class="hover:text-white transition-colors">Contact</a>
                 </div>
@@ -831,14 +913,20 @@
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const mobileMenu = document.getElementById('mobileMenu');
         const menuIcon = document.getElementById('menuIcon');
+        const cvBtn = document.getElementById('cvBtn');
+        const cvMenu = document.getElementById('cvMenu');
+        const cvCaret = document.getElementById('cvCaret');
+        const mobileCvBtn = document.getElementById('mobileCvBtn');
+        const mobileCvMenu = document.getElementById('mobileCvMenu');
+        const mobileCvCaret = document.getElementById('mobileCvCaret');
 
-        // Check user preferences or local storage
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            htmlElement.classList.add('dark');
-            themeIcon.className = 'fa-solid fa-sun';
-        } else {
+        // Dark mode is the default, light mode is opt-in
+        if (localStorage.theme === 'light') {
             htmlElement.classList.remove('dark');
             themeIcon.className = 'fa-solid fa-moon';
+        } else {
+            htmlElement.classList.add('dark');
+            themeIcon.className = 'fa-solid fa-sun';
         }
 
         // Toggle Theme Mode (Light / Dark)
@@ -854,11 +942,52 @@
             }
         });
 
+        // CV Dropdown Helper (Desktop + Mobile share the same behaviour)
+        function setCvDropdown(btn, menu, caret, open) {
+            menu.classList.toggle('hidden', !open);
+            menu.classList.toggle('is-open', open);
+            btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+            if (caret) {
+                caret.classList.toggle('rotate-180', open);
+            }
+        }
+
+        function toggleCvDropdown(btn, menu, caret) {
+            const willOpen = menu.classList.contains('hidden');
+            setCvDropdown(btn, menu, caret, willOpen);
+        }
+
+        function closeCvDropdowns() {
+            setCvDropdown(cvBtn, cvMenu, cvCaret, false);
+            setCvDropdown(mobileCvBtn, mobileCvMenu, mobileCvCaret, false);
+        }
+
+        cvBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            toggleCvDropdown(cvBtn, cvMenu, cvCaret);
+        });
+
+        mobileCvBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            toggleCvDropdown(mobileCvBtn, mobileCvMenu, mobileCvCaret);
+        });
+
+        // Close any open CV dropdown when clicking outside of it
+        document.addEventListener('click', (event) => {
+            if (!cvMenu.contains(event.target) && event.target !== cvBtn) {
+                setCvDropdown(cvBtn, cvMenu, cvCaret, false);
+            }
+            if (!mobileCvMenu.contains(event.target) && event.target !== mobileCvBtn) {
+                setCvDropdown(mobileCvBtn, mobileCvMenu, mobileCvCaret, false);
+            }
+        });
+
         // Toggle Responsive Mobile Navigation Menu
         mobileMenuBtn.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
             if (mobileMenu.classList.contains('hidden')) {
                 menuIcon.className = 'fa-solid fa-bars';
+                setCvDropdown(mobileCvBtn, mobileCvMenu, mobileCvCaret, false);
             } else {
                 menuIcon.className = 'fa-solid fa-xmark';
             }
@@ -870,7 +999,15 @@
             link.addEventListener('click', () => {
                 mobileMenu.classList.add('hidden');
                 menuIcon.className = 'fa-solid fa-bars';
+                setCvDropdown(mobileCvBtn, mobileCvMenu, mobileCvCaret, false);
             });
+        });
+
+        // Close the CV dropdown on Escape
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closeCvDropdowns();
+            }
         });
 
         // Form Submission Logic
